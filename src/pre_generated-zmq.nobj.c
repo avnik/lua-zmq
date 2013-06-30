@@ -1822,6 +1822,8 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "\n"
 "ZMQ_Error zmq_bind(ZMQ_Socket *, const char *);\n"
 "\n"
+"ZMQ_Error zmq_unbind(ZMQ_Socket *, const char *);\n"
+"\n"
 "ZMQ_Error zmq_connect(ZMQ_Socket *, const char *);\n"
 "\n"
 "int zmq_setsockopt (void *s, int option, const void *optval, size_t optvallen);\n"
@@ -2140,9 +2142,9 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "		return obj\n"
 "	end\n"
 "\n"
-"	-- export check functions for use in other modules.\n"
+"	-- export check functions for use in other modules.\n", /* ----- CUT ----- */
 "	obj_mt.c_check = c_check\n"
-"	obj_mt.ffi_check = obj_type_zmq_msg_t_check\n", /* ----- CUT ----- */
+"	obj_mt.ffi_check = obj_type_zmq_msg_t_check\n"
 "end\n"
 "\n"
 "\n"
@@ -2381,7 +2383,7 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "local os_lib_table = {\n"
 "	[\"Windows\"] = \"libzmq\",\n"
 "}\n"
-"C = ffi_load(os_lib_table[ffi.os] or \"zmq\")\n"
+"C = ffi_load(os_lib_table[ffi.os] or \"zmq.so.3\")\n"
 "\n"
 "\n"
 "-- Start \"ZErrors\" FFI interface\n"
@@ -2621,6 +2623,19 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "  return true\n"
 "end\n"
 "\n"
+"-- method: unbind\n"
+"function _meth.ZMQ_Socket.unbind(self, addr2)\n"
+"  \n"
+"  local addr_len2 = #addr2\n"
+"  local rc_zmq_unbind1 = 0\n"
+"  rc_zmq_unbind1 = C.zmq_unbind(self, addr2)\n"
+"  -- check for error.\n"
+"  if (-1 == rc_zmq_unbind1) then\n"
+"    return nil, error_code__ZMQ_Error__push(rc_zmq_unbind1)\n"
+"  end\n"
+"  return true\n"
+"end\n"
+"\n"
 "-- method: connect\n"
 "function _meth.ZMQ_Socket.connect(self, addr2)\n"
 "  \n"
@@ -2630,6 +2645,19 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "  -- check for error.\n"
 "  if (-1 == rc_zmq_connect1) then\n"
 "    return nil, error_code__ZMQ_Error__push(rc_zmq_connect1)\n"
+"  end\n"
+"  return true\n"
+"end\n"
+"\n"
+"-- method: disconnect\n"
+"function _meth.ZMQ_Socket.disconnect(self, addr2)\n"
+"  \n"
+"  local addr_len2 = #addr2\n"
+"  local rc_zmq_unbind1 = 0\n"
+"  rc_zmq_unbind1 = C.zmq_unbind(self, addr2)\n"
+"  -- check for error.\n"
+"  if (-1 == rc_zmq_unbind1) then\n"
+"    return nil, error_code__ZMQ_Error__push(rc_zmq_unbind1)\n"
 "  end\n"
 "  return true\n"
 "end\n"
@@ -2670,7 +2698,7 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "		[14] = 'fd',\n"
 "		[15] = 'events',\n"
 "		[16] = 'type',\n"
-"		[17] = 'linger',\n"
+"		[17] = 'linger',\n", /* ----- CUT ----- */
 "		[18] = 'reconnect_ivl',\n"
 "		[19] = 'backlog',\n"
 "		[20] = 'recovery_ivl_msec',\n"
@@ -2706,7 +2734,7 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "end\n"
 "\n"
 "local tmp_val_len = ffi.new('size_t[1]', 4)\n"
-"\n", /* ----- CUT ----- */
+"\n"
 "-- method: getopt\n"
 "function _meth.ZMQ_Socket.getopt(self, opt2)\n"
 "  \n"
@@ -3252,7 +3280,7 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "if (_meth.ZMQ_Socket.reconnect_ivl) then\n"
 "function _meth.ZMQ_Socket.reconnect_ivl(self)\n"
 "  \n"
-"  local value1\n"
+"  local value1\n", /* ----- CUT ----- */
 "  local rc_lzmq_socket_reconnect_ivl2 = 0\n"
 "  rc_lzmq_socket_reconnect_ivl2 = Cmod.lzmq_socket_reconnect_ivl(self, reconnect_ivl_value_tmp)\n"
 "  value1 = reconnect_ivl_value_tmp[0]\n"
@@ -3272,7 +3300,7 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "  local rc_lzmq_socket_set_reconnect_ivl1 = 0\n"
 "  rc_lzmq_socket_set_reconnect_ivl1 = Cmod.lzmq_socket_set_reconnect_ivl(self, value2)\n"
 "  -- check for error.\n"
-"  if (-1 == rc_lzmq_socket_set_reconnect_ivl1) then\n", /* ----- CUT ----- */
+"  if (-1 == rc_lzmq_socket_set_reconnect_ivl1) then\n"
 "    return nil, error_code__ZMQ_Error__push(rc_lzmq_socket_set_reconnect_ivl1)\n"
 "  end\n"
 "  return true\n"
@@ -3807,7 +3835,7 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "\n"
 "-- Start \"ZMQ_StopWatch\" FFI interface\n"
 "-- method: start\n"
-"function _pub.ZMQ_StopWatch.start()\n"
+"function _pub.ZMQ_StopWatch.start()\n", /* ----- CUT ----- */
 "  local this_flags1 = OBJ_UDATA_FLAG_OWN\n"
 "  local self\n"
 "  self = C.zmq_stopwatch_start()\n"
@@ -3830,7 +3858,7 @@ static const char *zmq_ffi_lua_code[] = { "local ffi=require\"ffi\"\n"
 "-- End \"ZMQ_StopWatch\" FFI interface\n"
 "\n"
 "-- method: init\n"
-"function _M.init(io_threads1)\n", /* ----- CUT ----- */
+"function _M.init(io_threads1)\n"
 "  io_threads1 = io_threads1 or 1\n"
 "  local rc_zmq_init_flags1 = OBJ_UDATA_FLAG_OWN\n"
 "  local rc_zmq_init1\n"
@@ -5053,6 +5081,26 @@ static int ZMQ_Socket__bind__meth(lua_State *L) {
   return 2;
 }
 
+/* method: unbind */
+static int ZMQ_Socket__unbind__meth(lua_State *L) {
+  ZMQ_Socket * this1;
+  size_t addr_len2;
+  const char * addr2;
+  ZMQ_Error rc_zmq_unbind1 = 0;
+  this1 = obj_type_ZMQ_Socket_check(L,1);
+  addr2 = luaL_checklstring(L,2,&(addr_len2));
+  rc_zmq_unbind1 = zmq_unbind(this1, addr2);
+  /* check for error. */
+  if((-1 == rc_zmq_unbind1)) {
+    lua_pushnil(L);
+      error_code__ZMQ_Error__push(L, rc_zmq_unbind1);
+  } else {
+    lua_pushboolean(L, 1);
+    lua_pushnil(L);
+  }
+  return 2;
+}
+
 /* method: connect */
 static int ZMQ_Socket__connect__meth(lua_State *L) {
   ZMQ_Socket * this1;
@@ -5066,6 +5114,26 @@ static int ZMQ_Socket__connect__meth(lua_State *L) {
   if((-1 == rc_zmq_connect1)) {
     lua_pushnil(L);
       error_code__ZMQ_Error__push(L, rc_zmq_connect1);
+  } else {
+    lua_pushboolean(L, 1);
+    lua_pushnil(L);
+  }
+  return 2;
+}
+
+/* method: disconnect */
+static int ZMQ_Socket__disconnect__meth(lua_State *L) {
+  ZMQ_Socket * this1;
+  size_t addr_len2;
+  const char * addr2;
+  ZMQ_Error rc_zmq_unbind1 = 0;
+  this1 = obj_type_ZMQ_Socket_check(L,1);
+  addr2 = luaL_checklstring(L,2,&(addr_len2));
+  rc_zmq_unbind1 = zmq_unbind(this1, addr2);
+  /* check for error. */
+  if((-1 == rc_zmq_unbind1)) {
+    lua_pushnil(L);
+      error_code__ZMQ_Error__push(L, rc_zmq_unbind1);
   } else {
     lua_pushboolean(L, 1);
     lua_pushnil(L);
@@ -7116,7 +7184,9 @@ static const luaL_Reg obj_ZMQ_Socket_pub_funcs[] = {
 static const luaL_Reg obj_ZMQ_Socket_methods[] = {
   {"close", ZMQ_Socket__close__meth},
   {"bind", ZMQ_Socket__bind__meth},
+  {"unbind", ZMQ_Socket__unbind__meth},
   {"connect", ZMQ_Socket__connect__meth},
+  {"disconnect", ZMQ_Socket__disconnect__meth},
   {"setopt", ZMQ_Socket__setopt__meth},
   {"getopt", ZMQ_Socket__getopt__meth},
   {"send_msg", ZMQ_Socket__send_msg__meth},
