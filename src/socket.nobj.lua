@@ -463,8 +463,14 @@ static const int opt_types[] = {
 	method "bind" {
 		c_method_call "ZMQ_Error"  "zmq_bind" { "const char *", "addr" }
 	},
+	method "unbind" {
+		c_method_call "ZMQ_Error"  "zmq_unbind" { "const char *", "addr" }
+	},
 	method "connect" {
 		c_method_call "ZMQ_Error"  "zmq_connect" { "const char *", "addr" }
+	},
+	method "disconnect" {
+		c_method_call "ZMQ_Error"  "zmq_unbind" { "const char *", "addr" }
 	},
 	ffi_cdef[[
 int zmq_setsockopt (void *s, int option, const void *optval, size_t optvallen);
