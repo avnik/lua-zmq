@@ -31,7 +31,7 @@ luajit_ffi = true,
 luajit_ffi_load_cmodule = true,
 
 ffi_load {
-"zmq", -- default lib name.
+"zmq.so.3", "zmq", -- default lib name.
 Windows = "libzmq", -- lib name for on windows.
 },
 
